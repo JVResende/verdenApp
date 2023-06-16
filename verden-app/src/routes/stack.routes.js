@@ -4,6 +4,9 @@ import { Home } from "../screens/home";
 import { Login } from "../screens/login";
 import { Signup } from "../screens/signup";
 import { Welcome } from '../screens/welcome';
+import { CreateCompany } from '../screens/createCompany';
+import { ForgotPassword } from '../screens/forgotPassword';
+import { ResetPassword } from '../screens/resetPassword';
 
 const { Navigator, Screen } = createNativeStackNavigator()
 
@@ -26,10 +29,34 @@ export function StackRoutes() {
                 }}
             />
             <Screen
+                name="forgotPassword"
+                component={ForgotPassword}
+                options={{
+                    title: "Esqueceu sua Senha?",
+                    headerTitleAlign: "center",
+                }}
+            />
+            <Screen
+                name="resetPassword"
+                component={ResetPassword}
+                options={{
+                    title: "Redefinir Senha",
+                    headerTitleAlign: "center",
+                }}
+            />
+            <Screen
                 name="signup"
                 component={Signup}
                 options={{
-                    title: "Cadastro",
+                    title: "Cadastrar",
+                    headerTitleAlign: "center",
+                }}
+            />
+            <Screen
+                name="createCompany"
+                component={CreateCompany}
+                options={{
+                    title: "Cadastrar Empresa",
                     headerTitleAlign: "center",
                 }}
             />

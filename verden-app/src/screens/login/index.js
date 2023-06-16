@@ -39,14 +39,21 @@ export function Login() {
 
             .then((res) => {
                 AsyncStorage.setItem("@token", res.data.Token)
-                Toast.show({
-                    description: ("Usuário logado com sucesso!"),
-                    style: {
-                        backgroundColor: "#22c55e",
-                    }
-                })
+                if (res.data.has_company === false) {
+                    navigation.navigate("createCompany")
+                } else {
+                    Toast.show({
+                        description: ("Usuário logado com sucesso!"),
+                        style: {
+                            backgroundColor: "#22c55e",
+                        }
+                    })
+                    setTimeout(() => {
+                        navigation.navigate("home")
+                    }, 1000);
+
+                }
                 setIsLoading(false)
-                navigation.navigate("home")
             })
             .catch((e) => {
                 if (e.response.status === 401) {
@@ -72,7 +79,7 @@ export function Login() {
 
     return (
         <NativeBaseProvider>
-            <VStack flex={1} safeArea mt={16} px={10}>
+            <VStack flex={1} safeArea mt={16} px={8}>
                 <Image source={logo} size={64} resizeMode="contain" alt="logo" alignSelf="center" my={-6} />
                 <Center>
                     <Controller
@@ -100,6 +107,13 @@ export function Login() {
                             />
                         )}
                     />
+                    <Link
+                        alignSelf="flex-start"
+                        mb={6}
+                        onPress={() => navigation.navigate("forgotPassword")}
+                        isExternal _text={{
+                            color: "#00875F"
+                        }} >Esqueceu sua senha?</Link>
                     <Button
                         width="full"
                         h={16}
@@ -116,11 +130,13 @@ export function Login() {
                             {isLoading ? <Spinner size="lg" /> : <>Entrar</>}
                         </Text>
                     </Button>
-                    <HStack mt={4}>
-                        <Text>Esqueceu sua senha? </Text>
-                        <Link isExternal _text={{
-                            color: "#00875F"
-                        }} >Recuperar senha</Link>
+                    <HStack mt={3}>
+                        <Text>Não possui uma conta? </Text>
+                        <Link
+                            onPress={() => navigation.navigate("signup")}
+                            isExternal _text={{
+                                color: "#00875F"
+                            }} >Cadastre-se</Link>
                     </HStack>
                 </Center>
             </VStack>

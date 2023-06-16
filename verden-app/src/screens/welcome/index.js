@@ -9,14 +9,14 @@ export function Welcome() {
 
     return (
         <NativeBaseProvider>
-            <VStack flex={1} safeArea mt={16} px={10}>
+            <VStack flex={1} safeArea mt={16} px={8}>
                 <Text
                     color="#00875F"
                     fontWeight="bold"
-                    fontSize={34}
+                    fontSize={32}
                     mb={6}
                 >
-                    Bem vindo ao Verden ESG
+                    Bem vindo à Plataforma Verden
                 </Text>
                 <Text
                     fontSize={16}
@@ -45,7 +45,7 @@ export function Welcome() {
                         mt={2}
                         width="full"
                         h={16}
-                        bg="none"
+                        bg="whitesmoke"
                         borderColor="#00875F"
                         borderWidth="1"
                         _pressed={{

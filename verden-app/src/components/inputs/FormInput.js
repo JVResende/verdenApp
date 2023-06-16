@@ -2,16 +2,32 @@ import React from "react";
 import { FormControl, Icon, Pressable, Input } from "native-base";
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function FormInput({ label, placeholder, errorMessage, onChangeText, passwordInput }) {
+export default function FormInput({ label, placeholder, errorMessage, onChangeText, passwordInput, cpf, phone, cpfValue, phoneValue, cnpj, cnpjValue, number, cep, cepValue }) {
 
     const invalid = !!errorMessage
 
     const [show, setShow] = React.useState(false)
 
+
     return (
         <FormControl mb={4} isRequired={true} isInvalid={invalid}>
             <FormControl.Label fontSize="md">{label}</FormControl.Label>
             <Input
+                maxLength={(cpfValue && 14) || (phoneValue && 15) || (cnpjValue && 18) || (cepValue && 9)}
+                value={
+                    (cpfValue && cpfValue.replace(/^(\d{3})\D*(\d{3})\D*(\d{3})\D*(\d{2})$/g, '$1.$2.$3-$4')) ||
+                    (phoneValue && phoneValue.replace(/\D+/g, '').replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2')) ||
+                    (cnpjValue && cnpjValue
+                        .replace(/\D+/g, '')
+                        .replace(/(\d{2})(\d)/, '$1.$2')
+                        .replace(/(\d{3})(\d)/, '$1.$2')
+                        .replace(/(\d{3})(\d)/, '$1/$2')
+                        .replace(/(\d{4})(\d)/, '$1-$2')
+                        .replace(/(-\d{2})\d+?$/, '$1')
+                    ) ||
+                    (cepValue && cepValue.replace(/(\d{5})(\d)/, '$1-$2'))
+                }
+                keyboardType={(cpf || phone || cnpj || cep || number) && "numeric"}
                 placeholder={placeholder}
                 onChangeText={onChangeText}
                 fontSize="md"
