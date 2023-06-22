@@ -60,14 +60,6 @@ export function StackRoutes() {
                     headerTitleAlign: "center",
                 }}
             />
-            <Screen
-                name="home"
-                component={Home}
-                options={{
-                    title: "Página Inicial",
-                    headerTitleAlign: "center",
-                }}
-            />
         </Navigator >
     )
 }

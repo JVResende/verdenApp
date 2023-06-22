@@ -8,6 +8,7 @@ import { NativeBaseProvider } from "native-base";
 import FormInput from "../../components/inputs/FormInput";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function CreateCompany() {
 
@@ -32,9 +33,13 @@ export function CreateCompany() {
         resolver: yupResolver(createCompanySchema)
     })
 
-    const handleCompanySignUp = (data) => {
+    const handleCompanySignUp = async (data) => {
         setIsLoading(true)
-        const headers = { 'Content-Type': 'application/json' };
+        const token = await AsyncStorage.getItem("@token")
+        const headers = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        };
         const body = {
             cnpj: data.cnpj,
             corporate_email: data.email,
@@ -49,7 +54,7 @@ export function CreateCompany() {
             voucher: data.voucher
         }
 
-        axios.post(`${BASE_URL}/api/register/company`, body, { headers: headers })
+        axios.post(`${BASE_URL}/register/company`, body, { headers: headers })
 
             .then((res) => {
                 Toast.show({
@@ -59,7 +64,7 @@ export function CreateCompany() {
                     style: {
                         backgroundColor: "#22c55e",
                     }
-                })                
+                })
                 setTimeout(() => {
                     navigation.navigate("home")
                 }, 1000);
@@ -73,7 +78,7 @@ export function CreateCompany() {
                         backgroundColor: "red"
                     }
                 })
-                console.log(e)
+                console.log(e.response.data.message)
             })
         setIsLoading(false)
     }
