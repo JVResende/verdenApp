@@ -7,12 +7,13 @@ import { Welcome } from '../screens/welcome';
 import { CreateCompany } from '../screens/createCompany';
 import { ForgotPassword } from '../screens/forgotPassword';
 import { ResetPassword } from '../screens/resetPassword';
+import { DrawerRoutes } from './drawer.routes';
 
 const { Navigator, Screen } = createNativeStackNavigator()
 
 export function StackRoutes() {
     return (
-        <Navigator>
+        <Navigator initialRouteName='stackHome'>
             <Screen
                 name="welcome"
                 component={Welcome}
@@ -58,6 +59,13 @@ export function StackRoutes() {
                 options={{
                     title: "Cadastrar Empresa",
                     headerTitleAlign: "center",
+                }}
+            />
+            <Screen
+                name="stackHome"
+                component={DrawerRoutes}
+                options={{
+                    headerShown: false
                 }}
             />
         </Navigator >
