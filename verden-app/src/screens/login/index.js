@@ -10,6 +10,7 @@ import logo from "../../../assets/logo.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
+import { ScrollView } from "react-native-gesture-handler";
 
 
 export function Login() {
@@ -49,7 +50,7 @@ export function Login() {
                         }
                     })
                     setTimeout(() => {
-                        navigation.navigate("home")
+                        navigation.navigate("stackHome")
                     }, 1000);
 
                 }
@@ -79,67 +80,69 @@ export function Login() {
 
     return (
         <NativeBaseProvider>
-            <VStack flex={1} safeArea mt={16} px={8}>
-                <Image source={logo} size={64} resizeMode="contain" alt="logo" alignSelf="center" my={-6} />
-                <Center>
-                    <Controller
-                        control={control}
-                        name="email"
-                        render={({ field: { onChange } }) => (
-                            <FormInput
-                                label="E-mail"
-                                placeholder="Digite seu e-mail"
-                                errorMessage={errors.email?.message}
-                                onChangeText={onChange}
-                            />
-                        )}
-                    />
-                    <Controller
-                        control={control}
-                        name="password"
-                        render={({ field: { onChange } }) => (
-                            <FormInput
-                                label="Senha"
-                                placeholder="Digite sua senha"
-                                errorMessage={errors.password?.message}
-                                onChangeText={onChange}
-                                passwordInput={true}
-                            />
-                        )}
-                    />
-                    <Link
-                        alignSelf="flex-start"
-                        mb={6}
-                        onPress={() => navigation.navigate("forgotPassword")}
-                        isExternal _text={{
-                            color: "#00875F"
-                        }} >Esqueceu sua senha?</Link>
-                    <Button
-                        width="full"
-                        h={16}
-                        bg="#00875F"
-                        _pressed={{
-                            bgColor: "#02583f"
-                        }}
-                        onPress={handleSubmit(handleLogIn)}
-                    >
-                        <Text
-                            fontSize="md"
-                            color="white"
-                        >
-                            {isLoading ? <Spinner size="lg" /> : <>Entrar</>}
-                        </Text>
-                    </Button>
-                    <HStack mt={3}>
-                        <Text>Não possui uma conta? </Text>
+            <ScrollView>
+                <VStack flex={1} safeArea mt={8} px={8}>
+                    <Image source={logo} size={64} resizeMode="contain" alt="logo" alignSelf="center" my={-6} />
+                    <Center>
+                        <Controller
+                            control={control}
+                            name="email"
+                            render={({ field: { onChange } }) => (
+                                <FormInput
+                                    label="E-mail"
+                                    placeholder="Digite seu e-mail"
+                                    errorMessage={errors.email?.message}
+                                    onChangeText={onChange}
+                                />
+                            )}
+                        />
+                        <Controller
+                            control={control}
+                            name="password"
+                            render={({ field: { onChange } }) => (
+                                <FormInput
+                                    label="Senha"
+                                    placeholder="Digite sua senha"
+                                    errorMessage={errors.password?.message}
+                                    onChangeText={onChange}
+                                    passwordInput={true}
+                                />
+                            )}
+                        />
                         <Link
-                            onPress={() => navigation.navigate("signup")}
+                            alignSelf="flex-start"
+                            mb={6}
+                            onPress={() => navigation.navigate("forgotPassword")}
                             isExternal _text={{
                                 color: "#00875F"
-                            }} >Cadastre-se</Link>
-                    </HStack>
-                </Center>
-            </VStack>
+                            }} >Esqueceu sua senha?</Link>
+                        <Button
+                            width="full"
+                            h={16}
+                            bg="#00875F"
+                            _pressed={{
+                                bgColor: "#02583f"
+                            }}
+                            onPress={handleSubmit(handleLogIn)}
+                        >
+                            <Text
+                                fontSize="md"
+                                color="white"
+                            >
+                                {isLoading ? <Spinner size="lg" /> : <>Entrar</>}
+                            </Text>
+                        </Button>
+                        <HStack mt={3}>
+                            <Text>Não possui uma conta? </Text>
+                            <Link
+                                onPress={() => navigation.navigate("signup")}
+                                isExternal _text={{
+                                    color: "#00875F"
+                                }} >Cadastre-se</Link>
+                        </HStack>
+                    </Center>
+                </VStack>
+            </ScrollView>
         </NativeBaseProvider>
     );
 }
