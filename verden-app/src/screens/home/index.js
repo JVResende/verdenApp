@@ -4,13 +4,18 @@ import { useProtectedPage } from "../../hooks/useProtectedPage";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { Alert } from "react-native";
 
 export function Home() {
 
     useProtectedPage()
 
+    const navigation = useNavigation()
+
     const [companies, setCompanies] = useState([])
     const [companyId, setCompanyId] = useState('')
+
 
     useEffect(() => {
         const getCompanies = async () => {
@@ -25,13 +30,17 @@ export function Home() {
                     setCompanies(res.data)
                 })
                 .catch(e => {
-                    console.log(e.message)
-                });
+                    if(e.message == "Request failed with status code 401" && token) {
+                        Alert.alert("Seu login expirou!", "Faça o login novamente.", [
+                            {text: 'OK', onPress: () => navigation.navigate("login")},
+                          ])
+                    }
+                })
         }
 
         getCompanies()
 
-    }, [])
+    }, [navigation.navigate])
 
     return (
         <NativeBaseProvider>
@@ -42,14 +51,6 @@ export function Home() {
                     mt={6}
                     px={8}
                 >
-                    <Text
-                        fontWeight="bold"
-                        fontSize={20}
-                        mb={6}
-                        alignSelf="center"
-                    >
-                        Painel Administrativo
-                    </Text>
                     <Text
                         fontSize={16}
                         mb={4}

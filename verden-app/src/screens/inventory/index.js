@@ -2,13 +2,13 @@ import React from "react";
 import { NativeBaseProvider, Text } from "native-base";
 import { useProtectedPage } from "../../hooks/useProtectedPage";
 
-export function Calculator() {
+export function Inventory() {
 
     useProtectedPage()
 
     return (
         <NativeBaseProvider>
-            <Text>Calculadora</Text>
+            <Text>Inventário</Text>
         </NativeBaseProvider>
     );
 }
