@@ -8,6 +8,7 @@ import { CreateCompany } from '../screens/createCompany';
 import { ForgotPassword } from '../screens/forgotPassword';
 import { ResetPassword } from '../screens/resetPassword';
 import { DrawerRoutes } from './drawer.routes';
+import { Profile } from '../screens/profile';
 
 const { Navigator, Screen } = createNativeStackNavigator()
 

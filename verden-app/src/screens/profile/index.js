@@ -1,14 +1,296 @@
-import React from "react";
-import { NativeBaseProvider, Text } from "native-base";
+import React, { useEffect, useState } from "react";
+import { Box, Button, Center, HStack, Image, NativeBaseProvider, ScrollView, Text, Toast, VStack } from "native-base";
 import { useProtectedPage } from "../../hooks/useProtectedPage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { BASE_URL } from "../../constants";
+import * as yup from "yup";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import FormInput from "../../components/inputs/FormInput";
+import { useNavigation } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
 
 export function Profile() {
 
     useProtectedPage()
 
+    const navigation = useNavigation()
+
+    const [companies, setCompanies] = useState([])
+    const [companyId, setCompanyId] = useState([])
+
+    const [userName, setUserName] = useState('')
+    const [email, setEmail] = useState('')
+
+    const [open, setOpen] = useState(false)
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    useEffect(() => {
+        const getCompanies = async () => {
+            const token = await AsyncStorage.getItem("@token")
+
+            const headers = {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+
+            axios.get(`${BASE_URL}/user/companies`, { headers: headers })
+                .then((res) => {
+                    setCompanies(res.data)
+                })
+                .catch(e => {
+                    console.log(e.message)
+                });
+        }
+
+        getCompanies()
+
+    }, [navigation.navigate])
+
+
+    useEffect(() => {
+        const getUser = async () => {
+            const token = await AsyncStorage.getItem("@token")
+            const headers = {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+
+            axios.get(`${BASE_URL}/user/authenticated`, { headers: headers })
+                .then((res) => {
+                    setUserName(res.data.name)
+                    setEmail(res.data.email)
+                })
+                .catch(e => {
+                    console.log(e.message)
+                });
+        }
+
+        getUser()
+
+    }, [])
+
+
+
+    const changePasswordSchema = yup.object({
+        oldPassword: yup.string().required("Insira sua senha atual.").min(6, "Senha inválida."),
+        newPassword: yup.string().required("Insira sua nova senha.").min(6, "Senha inválida."),
+    })
+
+
+    const { control, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(changePasswordSchema)
+    })
+
+    const handleChange = async (data) => {
+        setIsLoading(true)
+        const token = await AsyncStorage.getItem("@token")
+        const headers = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        }
+        const body = {
+            old_password: data.oldPassword,
+            new_password: data.newPassword
+        }
+
+        axios.post(`${BASE_URL}/change/password`, body, { headers: headers })
+
+            .then((res) => {
+                Toast.show({
+                    title: 'Pronto!',
+                    description: 'Senha alterada com sucesso!',
+                    style: {
+                        backgroundColor: "#22c55e",
+                    }
+                })
+            })
+            .catch((e) => {
+                Toast.show({
+                    title: 'Ocorreu algum erro.',
+                    description: ("Não foi possível redefinir sua senha. Tente novamente ou contate nosso suporte."),
+                    style: {
+                        backgroundColor: "red"
+                    }
+                })
+                console.log(e)
+            })
+        setIsLoading(false)
+    }
+
+
     return (
         <NativeBaseProvider>
-            <Text>Perfil</Text>
-        </NativeBaseProvider>
+            <ScrollView>
+                <VStack
+                    flex={1}
+                    safeArea
+                    mt={6}
+                    px={8}
+                >
+                    <HStack alignItems="center" >
+                        <Image
+                            source={require("../../../assets/profile-image-black.jpg")}
+                            style={{ width: 70, height: 70, borderRadius: 40, borderWidth: 3, borderColor: "black" }}
+                            alt="foto de perfil"
+                        />
+                        <VStack>
+                            <Text
+                                style={{ fontSize: 20, fontWeight: 800, marginLeft: 24 }}
+                            >
+                                {userName}
+                            </Text>
+                            <Text
+                                style={{ fontSize: 16, marginLeft: 24, marginTop: 4, color: "#363636" }}
+                            >
+                                {email}
+                            </Text>
+                        </VStack>
+                    </HStack>
+                    <VStack
+                        backgroundColor="#FFF"
+                        borderRadius={6}
+                        padding={5}
+                        marginVertical={32}
+                    >
+                        <Text
+                            fontSize={16}
+                            fontWeight="bold"
+                            alignSelf="center"
+                            marginBottom={4}
+                        >
+                            Empresas Cadastradas
+                        </Text>
+                        {companies.map(company => {
+                            return (
+                                <Box key={company.id}>
+                                    <HStack justifyContent="space-between" alignItems="center">
+                                        <Text
+                                            fontSize={16}
+                                            marginY={4}
+                                        >
+                                            {company.corporate_name}
+                                        </Text>
+                                        {companyId.includes(company.id) ?
+                                            <Feather
+                                                name="minus-circle"
+                                                size={24}
+                                                color="#00875F"
+                                                onPress={() => {
+                                                    setOpen(false)
+                                                    setCompanyId(companyId.filter(function (id) {
+                                                        return id !== company.id
+                                                    }))
+                                                }} /> :
+                                            <Feather
+                                                name="plus-circle"
+                                                size={24}
+                                                color="#00875F"
+                                                onPress={() => {
+                                                    setOpen(true)
+                                                    setCompanyId([...companyId, company.id])
+                                                }} />
+                                        }
+
+                                    </HStack>
+                                    {companyId.includes(company.id) &&
+                                        <VStack>
+                                            <Text
+                                                fontSize={16}
+                                                marginBottom={2}
+                                            >
+                                                • E-mail: {company.corporate_email}
+                                            </Text>
+                                            <Text
+                                                fontSize={16}
+                                                marginBottom={2}
+                                            >
+                                                • CNPJ: {company.cnpj}
+                                            </Text>
+                                            <Text
+                                                fontSize={16}
+                                                marginBottom={2}
+                                            >
+                                                • Cidade: {company.city}/{company.state}
+                                            </Text>
+                                            <Text
+                                                fontSize={16}
+                                                marginBottom={2}
+                                            >
+                                                • Endereço: {company.address} - {company.number}
+                                            </Text>
+                                            <Text
+                                                fontSize={16}
+                                                marginBottom={2}
+                                            >
+                                                • Telefone: {company.commercial_phone}
+                                            </Text>
+                                        </VStack>
+                                    }
+                                </Box>
+                            );
+                        })}
+                    </VStack>
+
+                    <VStack backgroundColor="#FFF" borderRadius={6} padding={5} mb={8}>
+                        <Text
+                            fontSize={16}
+                            mb={8}
+                            fontWeight="bold"
+                            alignSelf="center"
+                        >
+                            Edite suas informações aqui
+                        </Text>
+                        <Center>
+                            <Controller
+                                control={control}
+                                name="oldPassword"
+                                render={({ field: { onChange } }) => (
+                                    <FormInput
+                                        label="Senha atual"
+                                        placeholder="Digite a senha atual"
+                                        errorMessage={errors.oldPassword?.message}
+                                        onChangeText={onChange}
+                                        passwordInput={true}
+                                    />
+                                )}
+                            />
+                            <Controller
+                                control={control}
+                                name="newPassword"
+                                render={({ field: { onChange } }) => (
+                                    <FormInput
+                                        label="Nova senha"
+                                        placeholder="Digite a nova senha"
+                                        errorMessage={errors.newPassword?.message}
+                                        onChangeText={onChange}
+                                        passwordInput={true}
+                                    />
+                                )}
+                            />
+                            <Button
+                                width="full"
+                                h={16}
+                                bg="#00875F"
+                                _pressed={{
+                                    bgColor: "#02583f"
+                                }}
+                                onPress={handleSubmit(handleChange)}
+                            >
+                                <Text
+                                    fontSize="md"
+                                    color="white"
+                                >
+                                    {isLoading ? <Spinner size="lg" /> : <>Alterar senha</>}
+                                </Text>
+                            </Button>
+                        </Center>
+                    </VStack>
+                </VStack>
+            </ScrollView >
+
+        </NativeBaseProvider >
     );
 }

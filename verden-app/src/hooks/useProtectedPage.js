@@ -5,6 +5,8 @@ import { useNavigation } from "@react-navigation/native";
 
 export const useProtectedPage = () => {
 
+    const navigation = useNavigation()
+
     const getToken = async () => {
         const token = await AsyncStorage.getItem("@token")
 
@@ -12,8 +14,6 @@ export const useProtectedPage = () => {
             navigation.navigate("welcome")
         }
     }
-
-    const navigation = useNavigation()
 
     useEffect(() => {
 

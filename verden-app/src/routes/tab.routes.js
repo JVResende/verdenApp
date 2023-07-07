@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { Home } from '../screens/home';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Feather, MaterialCommunityIcons  } from '@expo/vector-icons';
-import { Calculator } from '../screens/calculator';
+import { Feather } from '@expo/vector-icons';
+import { Profile } from '../screens/profile';
 
 const { Navigator, Screen } = createBottomTabNavigator()
 
@@ -22,11 +22,11 @@ export function TabRoutes() {
                 }}
             />
             <Screen
-                name="tabCalculator"
-                component={Calculator}
+                name="tabProfile"
+                component={Profile}
                 options={{
-                    tabBarIcon: ({ color, size }) => <MaterialCommunityIcons  name="calculator-variant" color={color} size={size} />,
-                    tabBarLabel: 'Calculadora',
+                    tabBarIcon: ({ color, size }) => <Feather name='user' color={color} size={size}></Feather>,
+                    tabBarLabel: 'Perfil',
                     tabBarLabelStyle: { marginTop: -4, marginBottom: 4 },
                     tabBarActiveTintColor: '#00875F'
                 }}
