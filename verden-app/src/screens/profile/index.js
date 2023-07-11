@@ -23,8 +23,6 @@ export function Profile() {
     const [userName, setUserName] = useState('')
     const [email, setEmail] = useState('')
 
-    const [open, setOpen] = useState(false)
-
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
@@ -179,7 +177,6 @@ export function Profile() {
                                                 size={24}
                                                 color="#00875F"
                                                 onPress={() => {
-                                                    setOpen(false)
                                                     setCompanyId(companyId.filter(function (id) {
                                                         return id !== company.id
                                                     }))
@@ -189,7 +186,6 @@ export function Profile() {
                                                 size={24}
                                                 color="#00875F"
                                                 onPress={() => {
-                                                    setOpen(true)
                                                     setCompanyId([...companyId, company.id])
                                                 }} />
                                         }

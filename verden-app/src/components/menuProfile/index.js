@@ -33,7 +33,7 @@ export function MenuProfile() {
 
         getUser()
 
-    }, [])
+    }, [navigation.navigate])
 
     const goToProfile = () => {
         navigation.navigate("tabProfile")
