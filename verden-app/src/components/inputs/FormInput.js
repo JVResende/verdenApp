@@ -2,7 +2,9 @@ import React from "react";
 import { FormControl, Icon, Pressable, Input } from "native-base";
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function FormInput({ label, placeholder, errorMessage, onChangeText, passwordInput, cpf, phone, cpfValue, phoneValue, cnpj, cnpjValue, number, cep, cepValue }) {
+export default function FormInput(
+    { label, placeholder, errorMessage, onChangeText, passwordInput, cpf, phone, cpfValue, phoneValue, cnpj, cnpjValue, number, cep, cepValue, passwordValue }
+) {
 
     const invalid = !!errorMessage
 
@@ -25,7 +27,9 @@ export default function FormInput({ label, placeholder, errorMessage, onChangeTe
                         .replace(/(\d{4})(\d)/, '$1-$2')
                         .replace(/(-\d{2})\d+?$/, '$1')
                     ) ||
-                    (cepValue && cepValue.replace(/(\d{5})(\d)/, '$1-$2'))
+                    (cepValue && cepValue.replace(/(\d{5})(\d)/, '$1-$2')) ||
+                    (passwordValue && passwordValue)
+
                 }
                 keyboardType={(cpf || phone || cnpj || cep || number) && "numeric"}
                 placeholder={placeholder}

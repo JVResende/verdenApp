@@ -17,8 +17,7 @@ export function TabRoutes() {
                     tabBarIcon: ({ color, size }) => <Feather name='home' color={color} size={size}></Feather>,
                     tabBarLabel: 'Painel',
                     tabBarLabelStyle: {marginTop: -4, marginBottom: 4 },
-                    tabBarActiveTintColor: '#00875F'
-                    
+                    tabBarActiveTintColor: '#00875F'                    
                 }}
             />
             <Screen

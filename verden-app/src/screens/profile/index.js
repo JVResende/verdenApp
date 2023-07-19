@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Center, HStack, Image, NativeBaseProvider, ScrollView, Text, Toast, VStack } from "native-base";
+import { Box, Button, Center, HStack, Image, NativeBaseProvider, ScrollView, Spinner, Text, Toast, VStack } from "native-base";
 import { useProtectedPage } from "../../hooks/useProtectedPage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -43,12 +43,6 @@ export function Profile() {
                 });
         }
 
-        getCompanies()
-
-    }, [navigation.navigate])
-
-
-    useEffect(() => {
         const getUser = async () => {
             const token = await AsyncStorage.getItem("@token")
             const headers = {
@@ -68,7 +62,9 @@ export function Profile() {
 
         getUser()
 
-    }, [])
+        getCompanies()
+
+    }, [navigation.navigate])
 
 
 
@@ -78,7 +74,7 @@ export function Profile() {
     })
 
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const { control, handleSubmit, formState: { errors }, reset, getValues } = useForm({
         resolver: yupResolver(changePasswordSchema)
     })
 
@@ -104,16 +100,17 @@ export function Profile() {
                         backgroundColor: "#22c55e",
                     }
                 })
+                reset()
             })
+
             .catch((e) => {
                 Toast.show({
                     title: 'Ocorreu algum erro.',
-                    description: ("Não foi possível redefinir sua senha. Tente novamente ou contate nosso suporte."),
+                    description: e.message,
                     style: {
                         backgroundColor: "red"
                     }
                 })
-                console.log(e)
             })
         setIsLoading(false)
     }
@@ -250,6 +247,7 @@ export function Profile() {
                                         errorMessage={errors.oldPassword?.message}
                                         onChangeText={onChange}
                                         passwordInput={true}
+                                        passwordValue={getValues("oldPassword")}
                                     />
                                 )}
                             />
@@ -263,6 +261,7 @@ export function Profile() {
                                         errorMessage={errors.newPassword?.message}
                                         onChangeText={onChange}
                                         passwordInput={true}
+                                        passwordValue={getValues("newPassword")}                                        
                                     />
                                 )}
                             />
