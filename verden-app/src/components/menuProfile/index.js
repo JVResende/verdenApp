@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { HStack, Image, Pressable, Text, VStack } from "native-base";
 import { ImageBackground } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
+import { GlobalStateContext } from "../../global/globalStateContext";
 
 export function MenuProfile() {
 
     const navigation = useNavigation()
+
+    const { resetPage } = useContext(GlobalStateContext)
 
     const [userName, setUserName] = useState('')
     const [email, setEmail] = useState('')
@@ -33,7 +36,7 @@ export function MenuProfile() {
 
         getUser()
 
-    }, [navigation.navigate])
+    }, [resetPage])
 
     const goToProfile = () => {
         navigation.navigate("tabProfile")

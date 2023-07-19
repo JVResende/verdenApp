@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { NativeBaseProvider, ScrollView, VStack, Text, Select } from "native-base";
 import { useProtectedPage } from "../../hooks/useProtectedPage";
 import axios from "axios";
@@ -6,6 +6,7 @@ import { BASE_URL } from "../../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { Alert } from "react-native";
+import { GlobalStateContext } from "../../global/globalStateContext";
 
 export function Home() {
 
@@ -16,6 +17,7 @@ export function Home() {
     const [companies, setCompanies] = useState([])
     const [companyId, setCompanyId] = useState('')
 
+    const { resetPage } = useContext(GlobalStateContext)
 
     useEffect(() => {
         const getCompanies = async () => {
@@ -30,17 +32,18 @@ export function Home() {
                     setCompanies(res.data)
                 })
                 .catch(e => {
-                    if(e.message == "Request failed with status code 401" && token) {
+                    console.log(e)
+                    if (e.message == "Request failed with status code 401" && token) {
                         Alert.alert("Seu login expirou!", "Faça o login novamente.", [
-                            {text: 'OK', onPress: () => navigation.navigate("login")},
-                          ])
+                            { text: 'OK', onPress: () => navigation.navigate("login") },
+                        ])
                     }
                 })
         }
 
         getCompanies()
 
-    }, [navigation.navigate])
+    }, [resetPage])
 
     return (
         <NativeBaseProvider>

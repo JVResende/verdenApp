@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { VStack, Center, Button, Text, Image, Link, HStack, Toast, Spinner } from "native-base";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,11 +11,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
 import { ScrollView } from "react-native-gesture-handler";
+import { GlobalStateContext } from "../../global/globalStateContext";
 
 
 export function Login() {
 
     const navigation = useNavigation()
+
+    const { setResetPage } = useContext(GlobalStateContext)
+
+    const setToken = async (token) => {
+        await AsyncStorage.setItem("@token", token)
+    }
 
     const [isLoading, setIsLoading] = useState(false)
 
@@ -30,16 +37,15 @@ export function Login() {
 
     const handleLogIn = (data) => {
         setIsLoading(true)
-        const headers = { 'Content-Type': 'application/json' };
+        const headers = { 'Content-Type': 'application/json' }
         const body = {
             email: data.email,
             password: data.password
         }
 
         axios.post(`${BASE_URL}/login`, body, { headers: headers })
-
             .then((res) => {
-                AsyncStorage.setItem("@token", res.data.Token)
+                setToken(res.data.Token)
                 if (res.data.has_company === false) {
                     navigation.navigate("createCompany")
                 } else {
@@ -49,10 +55,10 @@ export function Login() {
                             backgroundColor: "#22c55e",
                         }
                     })
+                    setResetPage(true)
                     setTimeout(() => {
-                        navigation.navigate("stackHome")
-                    }, 1000);
-
+                        navigation.navigate("stackHome", { 'paramPropKey': 'paramPropValue' })
+                    }, 1000)
                 }
                 setIsLoading(false)
             })
