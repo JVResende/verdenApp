@@ -4,13 +4,16 @@ import { GlobalStateContext } from "./globalStateContext";
 export function GlobalState(props) {
 
     const [resetPage, setResetPage] = useState(false)
+    const [showBackButton, setShowBackButton] = useState(true)
 
     return (
         <GlobalStateContext.Provider
             value={
                 {
                     resetPage,
-                    setResetPage
+                    setResetPage,
+                    showBackButton,
+                    setShowBackButton
                 }
             }>
             {props.children}

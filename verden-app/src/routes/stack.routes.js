@@ -1,6 +1,5 @@
-import * as React from 'react';
+import React, { useContext } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Home } from "../screens/home";
 import { Login } from "../screens/login";
 import { Signup } from "../screens/signup";
 import { Welcome } from '../screens/welcome';
@@ -8,11 +7,14 @@ import { CreateCompany } from '../screens/createCompany';
 import { ForgotPassword } from '../screens/forgotPassword';
 import { ResetPassword } from '../screens/resetPassword';
 import { DrawerRoutes } from './drawer.routes';
-import { Profile } from '../screens/profile';
+import { GlobalStateContext } from "../global/globalStateContext";
 
 const { Navigator, Screen } = createNativeStackNavigator()
 
 export function StackRoutes() {
+
+    const { showBackButton } = useContext(GlobalStateContext)
+
     return (
         <Navigator initialRouteName='stackHome'>
             <Screen
@@ -28,6 +30,7 @@ export function StackRoutes() {
                 options={{
                     title: "Login",
                     headerTitleAlign: "center",
+                    headerBackVisible: showBackButton
                 }}
             />
             <Screen

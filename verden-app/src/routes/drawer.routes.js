@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext } from "react";
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { TabRoutes } from './tab.routes';
 import { Feather, MaterialCommunityIcons, Fontisto, MaterialIcons } from '@expo/vector-icons';
@@ -13,6 +13,7 @@ import { Inventory } from '../screens/inventory';
 import { Records } from '../screens/records';
 import { MenuProfile } from '../components/menuProfile';
 import { NativeBaseProvider } from 'native-base';
+import { GlobalStateContext } from '../global/globalStateContext';
 
 const { Navigator, Screen } = createDrawerNavigator()
 
@@ -20,8 +21,11 @@ export function DrawerRoutes() {
 
     const navigation = useNavigation()
 
+    const { setShowBackButton } = useContext(GlobalStateContext)
+
     const logout = async () => {
         await AsyncStorage.removeItem("@token")
+        setShowBackButton(false)
         navigation.navigate("login")
     }
 

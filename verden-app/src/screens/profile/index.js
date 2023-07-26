@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Box, Button, Center, HStack, Image, NativeBaseProvider, ScrollView, Spinner, Text, Toast, VStack } from "native-base";
 import { useProtectedPage } from "../../hooks/useProtectedPage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,14 +8,14 @@ import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormInput from "../../components/inputs/FormInput";
-import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+import { GlobalStateContext } from "../../global/globalStateContext";
 
 export function Profile() {
 
     useProtectedPage()
 
-    const navigation = useNavigation()
+    const { resetPage } = useContext(GlobalStateContext)
 
     const [companies, setCompanies] = useState([])
     const [companyId, setCompanyId] = useState([])
@@ -64,8 +64,7 @@ export function Profile() {
 
         getCompanies()
 
-    }, [navigation.navigate])
-
+    }, [resetPage])
 
 
     const changePasswordSchema = yup.object({
@@ -146,9 +145,10 @@ export function Profile() {
                     </HStack>
                     <VStack
                         backgroundColor="#FFF"
-                        borderRadius={6}
-                        padding={5}
+                        borderRadius={8}
+                        padding={4}
                         marginVertical={32}
+                        shadow={2}
                     >
                         <Text
                             fontSize={16}
@@ -227,7 +227,13 @@ export function Profile() {
                         })}
                     </VStack>
 
-                    <VStack backgroundColor="#FFF" borderRadius={6} padding={5} mb={8}>
+                    <VStack
+                        backgroundColor="#FFF"
+                        borderRadius={8}
+                        padding={4}
+                        mb={8}
+                        shadow={2}
+                        >
                         <Text
                             fontSize={16}
                             mb={8}
@@ -261,7 +267,7 @@ export function Profile() {
                                         errorMessage={errors.newPassword?.message}
                                         onChangeText={onChange}
                                         passwordInput={true}
-                                        passwordValue={getValues("newPassword")}                                        
+                                        passwordValue={getValues("newPassword")}
                                     />
                                 )}
                             />

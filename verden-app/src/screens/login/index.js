@@ -88,7 +88,7 @@ export function Login() {
         <NativeBaseProvider>
             <ScrollView>
                 <VStack flex={1} safeArea mt={8} px={8}>
-                    <Image source={logo} size={64} resizeMode="contain" alt="logo" alignSelf="center" my={-6} />
+                    <Image source={logo} size={64} resizeMode="contain" alt="logo" alignSelf="center" my={-8} />
                     <Center>
                         <Controller
                             control={control}
