@@ -5,6 +5,10 @@ export function GlobalState(props) {
 
     const [resetPage, setResetPage] = useState(false)
     const [showBackButton, setShowBackButton] = useState(true)
+    const [companyCnpj, setCompanyCnpj] = useState('')
+    const [companies, setCompanies] = useState([])
+    const [calculationType, setCalculationType] = useState('monthly')
+    const [storedCalculations, setStoredCalculations] = useState([])
 
     return (
         <GlobalStateContext.Provider
@@ -13,7 +17,15 @@ export function GlobalState(props) {
                     resetPage,
                     setResetPage,
                     showBackButton,
-                    setShowBackButton
+                    setShowBackButton,
+                    companyCnpj,
+                    setCompanyCnpj,
+                    companies,
+                    setCompanies,
+                    calculationType,
+                    setCalculationType,
+                    storedCalculations,
+                    setStoredCalculations
                 }
             }>
             {props.children}

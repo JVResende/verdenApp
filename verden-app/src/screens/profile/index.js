@@ -61,7 +61,6 @@ export function Profile() {
         }
 
         getUser()
-
         getCompanies()
 
     }, [resetPage])

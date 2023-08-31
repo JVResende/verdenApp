@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { HStack, Image, Pressable, Text, VStack } from "native-base";
-import { ImageBackground } from "react-native";
+import { Alert, ImageBackground } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
@@ -30,7 +30,12 @@ export function MenuProfile() {
                     setEmail(res.data.email)
                 })
                 .catch(e => {
-                    console.log(e.message)
+                    console.log(e)
+                    if (e.response.data.message == "Token has expired") {
+                        Alert.alert("Seu login expirou!", "Faça o login novamente.", [
+                            { text: 'OK', onPress: async () => { navigation.navigate("login"), setShowBackButton(false), await AsyncStorage.setItem("@token", "") } },
+                        ])
+                    }
                 })
         }
 

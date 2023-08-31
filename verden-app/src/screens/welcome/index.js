@@ -46,7 +46,7 @@ export function Welcome() {
                             mt={2}
                             width="full"
                             h={16}
-                            bg="whitesmoke"
+                            bg="#FFF"
                             borderColor="#00875F"
                             borderWidth="1"
                             _pressed={{

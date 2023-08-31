@@ -24,7 +24,7 @@ export function DrawerRoutes() {
     const { setShowBackButton } = useContext(GlobalStateContext)
 
     const logout = async () => {
-        await AsyncStorage.removeItem("@token")
+        await AsyncStorage.setItem("@token", "")
         setShowBackButton(false)
         navigation.navigate("login")
     }
@@ -33,7 +33,7 @@ export function DrawerRoutes() {
         <Navigator screenOptions={{ title: 'VERDEN ESG', headerTintColor: 'white', headerStyle: { backgroundColor: "#00875F" } }} drawerContent={props => {
             return (
                 <NativeBaseProvider>
-                    <MenuProfile/>
+                    <MenuProfile />
                     <DrawerContentScrollView {...props}>
                         <DrawerItemList {...props} />
                     </DrawerContentScrollView>

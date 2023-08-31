@@ -14,15 +14,16 @@ export function Home() {
 
     const navigation = useNavigation()
 
-    const [companies, setCompanies] = useState([])
-    const [companyId, setCompanyId] = useState('')
-    const [emission, setEmission] = useState('')
+    const [emissions, setEmissions] = useState('')
 
-    const { resetPage } = useContext(GlobalStateContext)
+    const { resetPage, setShowBackButton, companyCnpj, setCompanyCnpj, companies, setCompanies} = useContext(GlobalStateContext)
 
     useEffect(() => {
         const getCompanies = async () => {
             const token = await AsyncStorage.getItem("@token")
+            if (token === "") {
+                navigation.navigate("login")
+            }
             const headers = {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
@@ -34,9 +35,9 @@ export function Home() {
                 })
                 .catch(e => {
                     console.log(e)
-                    if (e.message == "Request failed with status code 401" && token) {
+                    if (e.response.data.message == "Token has expired") {
                         Alert.alert("Seu login expirou!", "Faça o login novamente.", [
-                            { text: 'OK', onPress: () => navigation.navigate("login") },
+                            { text: 'OK', onPress: async () => { navigation.navigate("login"), setShowBackButton(false), await AsyncStorage.setItem("@token", "") } },
                         ])
                     }
                 })
@@ -49,9 +50,9 @@ export function Home() {
                 Authorization: `Bearer ${token}`
             }
 
-            axios.get(`${BASE_URL}/statistics/emissions/total`, { headers: headers })
+            axios.get(`${BASE_URL}/total/compensation/statistics/${companyCnpj}`, { headers: headers })
                 .then((res) => {
-                    setEmission(res.data)
+                    setEmissions(res.data)
                 })
                 .catch(e => {
                     console.log(e.message)
@@ -62,7 +63,7 @@ export function Home() {
 
         getCompanies()
 
-    }, [resetPage])
+    }, [resetPage, companyCnpj])
 
     return (
         <NativeBaseProvider>
@@ -83,13 +84,13 @@ export function Home() {
                         w="full"
                         placeholder="Selecione uma empresa"
                         fontSize={16}
-                        selectedValue={companyId}
-                        onValueChange={itemValue => setCompanyId(itemValue)}
+                        selectedValue={companyCnpj}
+                        onValueChange={itemValue => setCompanyCnpj(itemValue)}
                     >
-                        {companies.map((item, index) => {
+                        {companies.map(item => {
                             return (
-                                <Select.Item value={item.id} key={index} label={item.corporate_name} />
-                            );
+                                <Select.Item value={item.cnpj} key={item.id} label={item.corporate_name} />
+                            )
                         })}
                     </Select>
                     <Box
@@ -114,7 +115,7 @@ export function Home() {
                                 mb={4}
                                 mr={2}
                             >
-                                {emission.total}
+                                {emissions ? emissions.total.compensated_emissions : "-"}
                             </Text>
                             <Text
                                 color="white"

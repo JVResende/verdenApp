@@ -8,6 +8,8 @@ import { ForgotPassword } from '../screens/forgotPassword';
 import { ResetPassword } from '../screens/resetPassword';
 import { DrawerRoutes } from './drawer.routes';
 import { GlobalStateContext } from "../global/globalStateContext";
+import { ExpressCalculationSteps } from "../screens/expressCalculationSteps";
+import { StoredExpressCalculations } from "../screens/storedExpressCalculations";
 
 const { Navigator, Screen } = createNativeStackNavigator()
 
@@ -70,6 +72,22 @@ export function StackRoutes() {
                 component={DrawerRoutes}
                 options={{
                     headerShown: false
+                }}
+            />
+            <Screen
+                name="expressCalculationSteps"
+                component={ExpressCalculationSteps}
+                options={{
+                    title: "Calculadora de Emissões",
+                    headerTitleAlign: "center",
+                }}
+            />
+            <Screen
+                name="storedExpressCalculations"
+                component={StoredExpressCalculations}
+                options={{
+                    title: "Cálculos Cadastrados",
+                    headerTitleAlign: "center",
                 }}
             />
         </Navigator >
